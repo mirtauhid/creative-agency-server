@@ -1,8 +1,11 @@
 {
-  "name": "volunteer-network-server",
+  "name": "creative-agency",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "12.11.1"
+    },
   "scripts": {
     "start": "node index.js",
     "start:dev": "nodemon index.js",
