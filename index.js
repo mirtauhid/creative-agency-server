@@ -31,7 +31,7 @@ client.connect(err => {
     const servicesCollection = client.db(process.env.DB_DB_NAME).collection(process.env.DB_COL_THREE);
     const reviewsCollection = client.db(process.env.DB_DB_NAME).collection(process.env.DB_COL_FOUR);
     console.log("db connected successfully");
-    
+
 
     app.post('/admin', (req, res) => {
         const newEmail = req.body;
@@ -51,7 +51,7 @@ client.connect(err => {
     })
 
     app.post('/addAService', (req, res) => {
-        const file = req.files.file;
+        const file = req.file;
         const title = req.body.title;
         const description = req.body.description;
         const newImg = file.data;
@@ -66,6 +66,13 @@ client.connect(err => {
         servicesCollection.insertOne({ title, description, image })
             .then(result => {
                 res.send(result.insertedCount > 0);
+            })
+    })
+
+    app.get('/services/:id', (req, res) => {
+        servicesCollection.find({ _id: ObjectId(req.params.id) })
+            .toArray((err, documents) => {
+                res.send(documents);
             })
     })
 
@@ -92,12 +99,7 @@ client.connect(err => {
             })
     })
 
-    app.get('/services/:id', (req, res) => {
-        servicesCollection.find({ _id: ObjectId(req.params.id) })
-            .toArray((err, documents) => {
-                res.send(documents);
-            })
-    })
+
 
     app.post('/users', (req, res) => {
         const newOrder = req.body;
@@ -130,7 +132,15 @@ client.connect(err => {
             })
     })
 
+    app.post('/isAdmin', (req, res) => {
+        const email = req.body.email;
+        adminCollection.find({ email: email })
+            .toArray((err, admin) => {
+                res.send(admin.length > 0)
+            })
+    })
+
 });
 
 
-app.listen(process.env.PORT || 5000)
+app.listen(process.env.PORT || 8000)
